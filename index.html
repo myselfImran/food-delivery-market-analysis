@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Food Delivery Market Growth Analysis — Project Hub</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: #F0F4F8; color: #1a2332; }
+
+  /* NAV */
+  .nav { background: #1F3864; color: #fff; padding: 0 32px; display: flex; align-items: center; justify-content: space-between; height: 56px; position: sticky; top: 0; z-index: 100; box-shadow: 0 2px 8px rgba(0,0,0,0.3); }
+  .nav .logo { font-size: 18px; font-weight: 700; letter-spacing: 0.5px; }
+  .nav .tabs { display: flex; gap: 4px; }
+  .nav .tab { padding: 8px 18px; border-radius: 6px; cursor: pointer; font-size: 13px; font-weight: 600; color: rgba(255,255,255,0.75); transition: all 0.2s; }
+  .nav .tab:hover, .nav .tab.active { background: #2E75B6; color: #fff; }
+  .nav .github-btn { padding: 7px 16px; border-radius: 6px; background: rgba(255,255,255,0.15); color: #fff; font-size: 13px; font-weight: 600; text-decoration: none; border: 1px solid rgba(255,255,255,0.3); transition: all 0.2s; }
+  .nav .github-btn:hover { background: rgba(255,255,255,0.25); }
+
+  /* SECTIONS */
+  .section { display: none; padding: 28px 36px; max-width: 1300px; margin: 0 auto; }
+  .section.active { display: block; }
+
+  /* HERO */
+  .hero { background: linear-gradient(135deg, #1F3864 0%, #2E75B6 60%, #4BACC6 100%); border-radius: 14px; padding: 36px 40px; color: #fff; margin-bottom: 28px; display: flex; justify-content: space-between; align-items: center; }
+  .hero h1 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+  .hero p  { font-size: 14px; opacity: 0.85; max-width: 520px; line-height: 1.6; }
+  .hero-stats { display: flex; gap: 24px; }
+  .hero-stat { text-align: center; background: rgba(255,255,255,0.15); border-radius: 10px; padding: 14px 20px; }
+  .hero-stat .val { font-size: 22px; font-weight: 800; }
+  .hero-stat .lbl { font-size: 11px; opacity: 0.8; margin-top: 2px; }
+
+  /* CARDS GRID */
+  .grid { display: grid; gap: 20px; }
+  .grid-3 { grid-template-columns: repeat(3, 1fr); }
+  .grid-2 { grid-template-columns: repeat(2, 1fr); }
+  .grid-4 { grid-template-columns: repeat(4, 1fr); }
+
+  .card { background: #fff; border-radius: 12px; padding: 22px 24px; box-shadow: 0 2px 8px rgba(0,0,0,0.07); border-top: 4px solid #2E75B6; }
+  .card h3 { font-size: 14px; font-weight: 700; color: #1F3864; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .card p, .card li { font-size: 13px; color: #445; line-height: 1.65; }
+  .card ul { padding-left: 18px; }
+  .card li { margin-bottom: 5px; }
+
+  .card.green  { border-color: #70AD47; }
+  .card.orange { border-color: #FFC000; }
+  .card.red    { border-color: #FF4B4B; }
+  .card.purple { border-color: #7B68EE; }
+
+  /* TABLES */
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th { background: #1F3864; color: #fff; padding: 10px 14px; text-align: left; font-weight: 600; }
+  td { padding: 9px 14px; border-bottom: 1px solid #e8eef5; }
+  tr:nth-child(even) td { background: #f4f8ff; }
+  tr:hover td { background: #EBF5FB; }
+
+  /* BADGES */
+  .badge { display: inline-block; padding: 3px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; }
+  .badge-blue   { background: #DBEAFE; color: #1E40AF; }
+  .badge-green  { background: #DCFCE7; color: #166534; }
+  .badge-orange { background: #FEF3C7; color: #92400E; }
+  .badge-red    { background: #FEE2E2; color: #991B1B; }
+  .badge-purple { background: #EDE9FE; color: #5B21B6; }
+
+  /* FLOW DIAGRAM */
+  .flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 20px 0; }
+  .flow-step { background: #fff; border: 2px solid #2E75B6; border-radius: 10px; padding: 14px 18px; text-align: center; min-width: 140px; box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
+  .flow-step .phase { font-size: 10px; font-weight: 700; color: #2E75B6; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 4px; }
+  .flow-step .name { font-size: 13px; font-weight: 700; color: #1F3864; }
+  .flow-step .dur  { font-size: 11px; color: #888; margin-top: 3px; }
+  .flow-arrow { font-size: 22px; color: #2E75B6; padding: 0 6px; }
+
+  /* KPI CARDS */
+  .kpi-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 16px; margin-bottom: 24px; }
+  .kpi { background: #fff; border-radius: 10px; padding: 18px 20px; box-shadow: 0 2px 6px rgba(0,0,0,0.07); text-align: center; border-bottom: 4px solid #2E75B6; }
+  .kpi .val { font-size: 26px; font-weight: 800; color: #1F3864; }
+  .kpi .change { font-size: 12px; color: #70AD47; font-weight: 600; margin: 4px 0; }
+  .kpi .label { font-size: 12px; color: #888; }
+
+  /* JIRA */
+  .story { background: #fff; border-radius: 10px; border-left: 5px solid #2E75B6; padding: 16px 20px; margin-bottom: 14px; box-shadow: 0 2px 5px rgba(0,0,0,0.06); }
+  .story-header { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+  .story-id { font-size: 12px; font-weight: 700; color: #2E75B6; background: #EBF5FF; padding: 3px 8px; border-radius: 5px; }
+  .story-title { font-size: 14px; font-weight: 700; color: #1F3864; }
+  .story p { font-size: 13px; color: #556; line-height: 1.6; margin-bottom: 6px; }
+  .story .criteria { background: #F0F7FF; border-radius: 6px; padding: 10px 14px; margin-top: 8px; }
+  .story .criteria li { font-size: 12px; color: #334; margin-bottom: 3px; }
+
+  /* PBI DASHBOARD */
+  .pbi-board { background: #1F3864; border-radius: 14px; padding: 24px; color: #fff; }
+  .pbi-board h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+  .pbi-panels { display: grid; grid-template-columns: repeat(2,1fr); gap: 12px; }
+  .pbi-panel { background: rgba(255,255,255,0.08); border-radius: 10px; padding: 16px; border: 1px solid rgba(255,255,255,0.15); }
+  .pbi-panel .panel-title { font-size: 12px; font-weight: 700; color: #4BACC6; text-transform: uppercase; letter-spacing: 0.8px; margin-bottom: 8px; }
+  .pbi-panel ul { font-size: 12px; color: rgba(255,255,255,0.8); padding-left: 16px; }
+  .pbi-panel li { margin-bottom: 4px; }
+
+  /* SECTION TITLES */
+  .section-title { font-size: 20px; font-weight: 800; color: #1F3864; margin-bottom: 6px; }
+  .section-sub   { font-size: 13px; color: #778; margin-bottom: 22px; }
+  .divider { height: 2px; background: linear-gradient(to right, #2E75B6, transparent); margin: 28px 0; border-radius: 2px; }
+
+  /* TECH STACK */
+  .tech-icon { font-size: 24px; margin-bottom: 6px; }
+  .tech-name { font-size: 13px; font-weight: 700; color: #1F3864; }
+  .tech-desc { font-size: 11px; color: #778; margin-top: 3px; }
+</style>
+</head>
+<body>
+
+<div class="nav">
+  <div class="logo">🍕 Food Delivery Market Growth Analysis</div>
+  <div class="tabs">
+    <div class="tab active" onclick="showTab('overview')">📊 Overview</div>
+    <div class="tab" onclick="showTab('requirements')">📋 Requirements</div>
+    <div class="tab" onclick="showTab('stories')">🎯 User Stories</div>
+    <div class="tab" onclick="showTab('workflow')">🔄 Process Flow</div>
+    <div class="tab" onclick="showTab('powerbi')">📈 Power BI Specs</div>
+    <div class="tab" onclick="showTab('jira')">🗂 Jira Backlog</div>
+  </div>
+  <a href="https://github.com/YOUR-USERNAME/food-delivery-market-analysis" target="_blank" class="github-btn">⭐ GitHub Repo</a>
+</div>
+
+<!-- ===================== OVERVIEW ===================== -->
+<div id="overview" class="section active">
+  <div class="hero">
+    <div>
+      <h1>🍕 Food Delivery Market Growth Analysis</h1>
+      <p>An end-to-end business analysis project covering requirements gathering, data modeling, customer segmentation, competitive intelligence, and executive dashboards — using SQL, Python, Excel & Power BI.</p>
+      <div style="margin-top:16px; display:flex; gap:10px; flex-wrap:wrap;">
+        <span class="badge badge-blue">📄 BRD v1.0</span>
+        <span class="badge badge-green">✅ Approved</span>
+        <span class="badge badge-orange">📅 Mar–May 2026</span>
+        <span class="badge badge-purple">🏢 Business Analysis Project</span>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stat"><div class="val">24.3%</div><div class="lbl">Revenue CAGR</div></div>
+      <div class="hero-stat"><div class="val">5</div><div class="lbl">Project Phases</div></div>
+      <div class="hero-stat"><div class="val">4</div><div class="lbl">Power BI Dashboards</div></div>
+      <div class="hero-stat"><div class="val">96.8%</div><div class="lbl">Forecast R² Score</div></div>
+    </div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi"><div class="val">₹4.27M</div><div class="change">↑ 24.3% CAGR</div><div class="label">Total Net Revenue (2022–25)</div></div>
+    <div class="kpi"><div class="val">44,016</div><div class="change">↑ 33.8% Peak Growth</div><div class="label">Completed Orders</div></div>
+    <div class="kpi"><div class="val">7,972</div><div class="change">↑ Champions: 1,365</div><div class="label">Unique Customers</div></div>
+    <div class="kpi"><div class="val">34.4 min</div><div class="change">Target: &lt;30 min</div><div class="label">Avg Delivery Time</div></div>
+  </div>
+
+  <div class="section-title">Project Deliverables</div>
+  <div class="section-sub">All deliverables created end-to-end by the Business Analyst team</div>
+  <div class="grid grid-3" style="margin-bottom:24px;">
+    <div class="card">
+      <h3>📄 Documentation</h3>
+      <ul>
+        <li>Business Requirements Document (BRD)</li>
+        <li>Stakeholder Register</li>
+        <li>Risk Register</li>
+        <li>Data Dictionary</li>
+        <li>User Stories & Acceptance Criteria</li>
+        <li>UAT Sign-off Tracker</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h3>💾 Technical Artifacts</h3>
+      <ul>
+        <li>SQL Schema + KPI Query Scripts</li>
+        <li>Python ETL & Analysis Script</li>
+        <li>RFM Segmentation Model (K-Means)</li>
+        <li>Revenue Forecasting Model (R²: 0.97)</li>
+        <li>Excel Financial Model (7 sheets)</li>
+        <li>Market Analysis Data Workbook</li>
+      </ul>
+    </div>
+    <div class="card orange">
+      <h3>📊 Dashboards & Reports</h3>
+      <ul>
+        <li>Executive Market Overview (Power BI)</li>
+        <li>Regional Performance Dashboard</li>
+        <li>Customer Segmentation Report</li>
+        <li>Competitor Tracking Dashboard</li>
+        <li>Python Visualization Dashboard (PNG)</li>
+        <li>Monthly/Quarterly PDF Reports</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section-title">Technology Stack</div>
+  <div class="section-sub">Core tools and platforms used across the project lifecycle</div>
+  <div class="grid grid-4">
+    <div class="card" style="text-align:center;">
+      <div class="tech-icon">🗃️</div>
+      <div class="tech-name">SQL (PostgreSQL)</div>
+      <div class="tech-desc">Data warehouse, KPI queries, ETL stored procedures, cohort & RFM analysis</div>
+    </div>
+    <div class="card green" style="text-align:center;">
+      <div class="tech-icon">🐍</div>
+      <div class="tech-name">Python</div>
+      <div class="tech-desc">pandas, scikit-learn, matplotlib — EDA, clustering, regression forecasting</div>
+    </div>
+    <div class="card orange" style="text-align:center;">
+      <div class="tech-icon">📊</div>
+      <div class="tech-name">Microsoft Excel</div>
+      <div class="tech-desc">Financial models, scenario analysis, pivot tables, CAGR computation</div>
+    </div>
+    <div class="card purple" style="text-align:center;">
+      <div class="tech-icon">📈</div>
+      <div class="tech-name">Power BI</div>
+      <div class="tech-desc">4 interactive dashboards, drill-through, DAX measures, scheduled refresh</div>
+    </div>
+    <div class="card" style="text-align:center;">
+      <div class="tech-icon">🗺️</div>
+      <div class="tech-name">LucidChart</div>
+      <div class="tech-desc">AS-IS & TO-BE process flow diagrams, swim-lane workflows, data lineage</div>
+    </div>
+    <div class="card green" style="text-align:center;">
+      <div class="tech-icon">📋</div>
+      <div class="tech-name">Jira</div>
+      <div class="tech-desc">Sprint planning, epic/story tracking, UAT bugs, backlog management</div>
+    </div>
+    <div class="card orange" style="text-align:center;">
+      <div class="tech-icon">💻</div>
+      <div class="tech-name">GitHub</div>
+      <div class="tech-desc">Version control for all SQL & Python scripts, CI/CD for data pipelines</div>
+    </div>
+    <div class="card purple" style="text-align:center;">
+      <div class="tech-icon">📝</div>
+      <div class="tech-name">Confluence</div>
+      <div class="tech-desc">Living documentation, BRD, meeting notes, data dictionary, runbooks</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== REQUIREMENTS ===================== -->
+<div id="requirements" class="section">
+  <div class="section-title">Business & Functional Requirements</div>
+  <div class="section-sub">Gathered through stakeholder interviews, workshops, and current-state assessment</div>
+
+  <div class="grid grid-2" style="margin-bottom:24px;">
+    <div class="card">
+      <h3>🎯 Business Objectives</h3>
+      <ul>
+        <li>Identify top 3–5 cities for market expansion with highest demand potential</li>
+        <li>Increase revenue by 10–15% through pricing & demand optimization</li>
+        <li>Reduce customer churn by 8% using RFM segmentation insights</li>
+        <li>Decrease average delivery time by 12% through route analytics</li>
+        <li>Establish real-time competitor tracking to maintain pricing advantage</li>
+        <li>Build a self-serve analytics platform for non-technical stakeholders</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h3>📦 Data Requirements</h3>
+      <table>
+        <tr><th>Data Source</th><th>Update Freq</th><th>Owner</th></tr>
+        <tr><td>Order Transactions (CRM)</td><td>Daily</td><td>Data Eng</td></tr>
+        <tr><td>Market Benchmarks</td><td>Quarterly</td><td>Research</td></tr>
+        <tr><td>Competitor Data (API)</td><td>Weekly</td><td>Analytics</td></tr>
+        <tr><td>Customer Demographics</td><td>Monthly</td><td>Marketing</td></tr>
+        <tr><td>Delivery GPS Metrics</td><td>Daily</td><td>Operations</td></tr>
+        <tr><td>Restaurant Partner Data</td><td>Weekly</td><td>Operations</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section-title" style="font-size:17px;">Non-Functional Requirements</div>
+  <div class="divider"></div>
+  <table style="margin-bottom:24px;">
+    <tr><th>Category</th><th>Requirement</th><th>SLA / Metric</th><th>Priority</th></tr>
+    <tr><td>Performance</td><td>SQL query response time</td><td>&lt; 30 seconds for standard reports</td><td><span class="badge badge-red">High</span></td></tr>
+    <tr><td>Scalability</td><td>Handle 5x data growth over 3 years</td><td>Partitioned tables + indexed views</td><td><span class="badge badge-red">High</span></td></tr>
+    <tr><td>Availability</td><td>Power BI dashboard uptime</td><td>99.5% during business hours</td><td><span class="badge badge-red">High</span></td></tr>
+    <tr><td>Security</td><td>Role-based access control</td><td>PII masked for non-privileged users</td><td><span class="badge badge-red">High</span></td></tr>
+    <tr><td>Data Quality</td><td>Market data accuracy</td><td>&gt; 98% completeness & accuracy</td><td><span class="badge badge-orange">Medium</span></td></tr>
+    <tr><td>Usability</td><td>Dashboard learnability</td><td>Non-technical proficient in &lt; 2 hours</td><td><span class="badge badge-orange">Medium</span></td></tr>
+    <tr><td>Auditability</td><td>Data transformation logging</td><td>Full lineage in ETL pipeline</td><td><span class="badge badge-orange">Medium</span></td></tr>
+  </table>
+
+  <div class="grid grid-2">
+    <div class="card red">
+      <h3>⚠️ Risk Register</h3>
+      <table>
+        <tr><th>Risk</th><th>Likelihood</th><th>Impact</th></tr>
+        <tr><td>Poor data quality</td><td>Medium</td><td>High</td></tr>
+        <tr><td>Stakeholder misalignment on KPIs</td><td>Medium</td><td>High</td></tr>
+        <tr><td>Scope creep</td><td>High</td><td>Medium</td></tr>
+        <tr><td>Power BI performance (large data)</td><td>Medium</td><td>Medium</td></tr>
+        <tr><td>Model overfitting (Python)</td><td>Low</td><td>Medium</td></tr>
+      </table>
+    </div>
+    <div class="card">
+      <h3>✅ Acceptance Criteria (Global)</h3>
+      <ul>
+        <li>All KPIs match agreed definitions in the data dictionary</li>
+        <li>SQL queries produce consistent results vs. Python outputs</li>
+        <li>Power BI dashboards load in &lt; 5 seconds on standard browsers</li>
+        <li>Forecast model achieves R² ≥ 0.85 on validation set</li>
+        <li>UAT sign-off obtained from all 5 stakeholder groups</li>
+        <li>All data refreshes automated (no manual intervention)</li>
+        <li>Documentation published in Confluence before go-live</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== USER STORIES ===================== -->
+<div id="stories" class="section">
+  <div class="section-title">User Stories & Acceptance Criteria</div>
+  <div class="section-sub">Written in standard BA format: "As a [role], I want to [action] so that [business value]"</div>
+
+  <div style="margin-bottom:20px;">
+    <span class="badge badge-blue" style="font-size:13px; padding:6px 14px; margin-right:8px;">Epic 1: Market Intelligence</span>
+    <span class="badge badge-green" style="font-size:13px; padding:6px 14px; margin-right:8px;">Epic 2: Customer Analytics</span>
+    <span class="badge badge-orange" style="font-size:13px; padding:6px 14px; margin-right:8px;">Epic 3: Competitive Intelligence</span>
+    <span class="badge badge-purple" style="font-size:13px; padding:6px 14px;">Epic 4: Operational Efficiency</span>
+  </div>
+
+  <div class="story">
+    <div class="story-header">
+      <span class="story-id">US-001</span>
+      <span class="badge badge-red">High Priority</span>
+      <span class="badge badge-blue">Epic 1</span>
+      <span class="story-title">Regional Market Growth Dashboard</span>
+    </div>
+    <p><strong>As a</strong> VP of Strategy, <strong>I want to</strong> view food delivery market growth trends by region on an interactive dashboard <strong>so that</strong> I can identify high-opportunity expansion zones and allocate resources effectively.</p>
+    <div class="criteria">
+      <strong style="font-size:12px;">✅ Acceptance Criteria:</strong>
+      <ul>
+        <li>Dashboard displays YoY growth % and CAGR (3yr & 5yr) by city/region</li>
+        <li>Drill-down filters available: city, cuisine type, customer segment, date range</li>
+        <li>Market share pie chart updates dynamically with filter selections</li>
+        <li>Data refreshes monthly; stale data alert shown if &gt; 35 days old</li>
+        <li>Export to PDF and Excel available for reporting</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="story">
+    <div class="story-header">
+      <span class="story-id">US-002</span>
+      <span class="badge badge-red">High Priority</span>
+      <span class="badge badge-blue">Epic 1</span>
+      <span class="story-title">SQL Market Sizing Queries</span>
+    </div>
+    <p><strong>As a</strong> Data Analyst, <strong>I want</strong> parameterized SQL queries that extract and aggregate order data by region and time period <strong>so that</strong> I can perform rapid market sizing analysis without writing queries from scratch.</p>
+    <div class="criteria">
+      <strong style="font-size:12px;">✅ Acceptance Criteria:</strong>
+      <ul>
+        <li>Query returns total orders, revenue, AOV, and unique customers</li>
+        <li>Parameters: date range, region, cuisine type, order status</li>
+        <li>Executes in under 30 seconds on 10M+ row dataset</li>
+        <li>Results match Power BI dashboard figures (±0.1% tolerance)</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="story">
+    <div class="story-header">
+      <span class="story-id">US-003</span>
+      <span class="badge badge-red">High Priority</span>
+      <span class="badge badge-green">Epic 2</span>
+      <span class="story-title">RFM Customer Segmentation</span>
+    </div>
+    <p><strong>As a</strong> Marketing Manager, <strong>I want</strong> customers segmented using RFM (Recency, Frequency, Monetary) analysis <strong>so that</strong> I can target high-value customers with personalized campaigns and re-engage churned users.</p>
+    <div class="criteria">
+      <strong style="font-size:12px;">✅ Acceptance Criteria:</strong>
+      <ul>
+        <li>Python script generates RFM scores for all active customers</li>
+        <li>Minimum 5 segments: Champions, Loyal, At Risk, Recent, Lost</li>
+        <li>Output includes customer_id, segment label, RFM scores, and CLV estimate</li>
+        <li>Results exportable to Excel/CSV for CRM campaign import</li>
+        <li>Visualized in Power BI as interactive bar chart and scatter plot</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="story">
+    <div class="story-header">
+      <span class="story-id">US-004</span>
+      <span class="badge badge-red">High Priority</span>
+      <span class="badge badge-green">Epic 2</span>
+      <span class="story-title">Executive KPI Summary Dashboard</span>
+    </div>
+    <p><strong>As a</strong> CEO, <strong>I want</strong> a single-page executive summary dashboard <strong>so that</strong> I can monitor market performance at a glance during monthly leadership reviews without needing to drill into raw data.</p>
+    <div class="criteria">
+      <strong style="font-size:12px;">✅ Acceptance Criteria:</strong>
+      <ul>
+        <li>KPI cards: Revenue, Orders, Market Share %, Customer NPS, Avg Delivery Time</li>
+        <li>MoM and YoY trend sparklines on each KPI card</li>
+        <li>RAG (Red/Amber/Green) status indicators vs. targets</li>
+        <li>Mobile-responsive layout (tested on iOS Safari & Android Chrome)</li>
+        <li>Dashboard loads in &lt; 5 seconds on standard broadband connection</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="story">
+    <div class="story-header">
+      <span class="story-id">US-005</span>
+      <span class="badge badge-orange">Medium Priority</span>
+      <span class="badge badge-orange">Epic 3</span>
+      <span class="story-title">Competitor Price Tracking</span>
+    </div>
+    <p><strong>As a</strong> Strategy Analyst, <strong>I want</strong> automated competitor pricing data loaded into our database weekly <strong>so that</strong> I can track our price competitiveness and trigger pricing reviews when gaps exceed thresholds.</p>
+    <div class="criteria">
+      <strong style="font-size:12px;">✅ Acceptance Criteria:</strong>
+      <ul>
+        <li>Competitor price index calculated and stored every Monday</li>
+        <li>Alert triggered automatically if our price gap exceeds 10% vs. top competitor</li>
+        <li>Historical data retained for 24-month trend analysis</li>
+        <li>Data source, confidence level, and timestamp documented per record</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="story">
+    <div class="story-header">
+      <span class="story-id">US-006</span>
+      <span class="badge badge-orange">Medium Priority</span>
+      <span class="badge badge-purple">Epic 4</span>
+      <span class="story-title">Revenue Forecasting Model</span>
+    </div>
+    <p><strong>As a</strong> Finance Director, <strong>I want</strong> a Python-based revenue forecasting model with 24-month projections <strong>so that</strong> I can build accurate financial plans and scenario budgets for board presentations.</p>
+    <div class="criteria">
+      <strong style="font-size:12px;">✅ Acceptance Criteria:</strong>
+      <ul>
+        <li>Model achieves R² ≥ 0.85 and MAE within 5% of mean monthly revenue</li>
+        <li>Forecasts generated for Base, Optimistic (+15%), and Pessimistic (−15%) scenarios</li>
+        <li>Output in Excel format with monthly and annual summaries</li>
+        <li>Model documentation includes assumptions and limitations section</li>
+        <li>Re-runs automatically when new monthly actuals are loaded</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== WORKFLOW ===================== -->
+<div id="workflow" class="section">
+  <div class="section-title">Process Flow Diagrams</div>
+  <div class="section-sub">AS-IS and TO-BE workflows mapped in LucidChart — shown here as structured process diagrams</div>
+
+  <div class="card" style="margin-bottom:24px;">
+    <h3>🔄 End-to-End Project Process Flow (5 Phases)</h3>
+    <div class="flow" style="justify-content:center; margin-top:16px;">
+      <div class="flow-step" style="border-color:#1F3864;">
+        <div class="phase">Phase 1</div>
+        <div class="name">Requirements Gathering</div>
+        <div class="dur">Mar 1–14</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-color:#2E75B6;">
+        <div class="phase">Phase 2</div>
+        <div class="name">Data Collection & ETL</div>
+        <div class="dur">Mar 15–Apr 4</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-color:#4BACC6;">
+        <div class="phase">Phase 3</div>
+        <div class="name">Analysis & Modeling</div>
+        <div class="dur">Apr 5–25</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-color:#70AD47;">
+        <div class="phase">Phase 4</div>
+        <div class="name">Dashboards & Reports</div>
+        <div class="dur">Apr 26–May 16</div>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step" style="border-color:#FFC000;">
+        <div class="phase">Phase 5</div>
+        <div class="name">UAT & Deployment</div>
+        <div class="dur">May 17–31</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-2" style="margin-bottom:24px;">
+    <div class="card">
+      <h3>📥 Data Pipeline Flow (AS-IS → TO-BE)</h3>
+      <div style="font-size:13px; line-height:1.8; color:#445;">
+        <div style="background:#FEE2E2; padding:12px; border-radius:8px; margin-bottom:12px;">
+          <strong>❌ AS-IS (Current State):</strong><br>
+          Manual data exports → Excel files sent via email → Manual consolidation → Static PowerPoint reports → Outdated by delivery date
+        </div>
+        <div style="background:#DCFCE7; padding:12px; border-radius:8px;">
+          <strong>✅ TO-BE (Future State):</strong><br>
+          Automated ETL (Python) → Central SQL Warehouse → Scheduled refresh → Live Power BI dashboards → Stakeholders self-serve insights
+        </div>
+      </div>
+    </div>
+    <div class="card green">
+      <h3>👥 Stakeholder Decision Flow</h3>
+      <div style="font-size:13px; color:#445; line-height:1.8;">
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="background:#2E75B6; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700;">BA Team</span>
+          <span>→ Gathers requirements</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="background:#2E75B6; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700;">Data Eng</span>
+          <span>→ Builds ETL & SQL</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="background:#2E75B6; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700;">Analytics</span>
+          <span>→ Python models & insights</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="background:#2E75B6; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700;">BI Team</span>
+          <span>→ Power BI dashboards</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px; margin-bottom:8px;">
+          <span style="background:#70AD47; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700;">Stakeholders</span>
+          <span>→ UAT review & sign-off</span>
+        </div>
+        <div style="display:flex; align-items:center; gap:8px;">
+          <span style="background:#FFC000; color:#fff; padding:4px 10px; border-radius:6px; font-size:12px; font-weight:700;">GO LIVE</span>
+          <span>→ Production deployment</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h3>🔄 ETL Data Flow (Python Pipeline Architecture)</h3>
+    <div style="display:flex; align-items:stretch; gap:0; margin-top:14px; flex-wrap:wrap; justify-content:center;">
+      <div style="background:#EBF5FF; border:2px solid #2E75B6; border-radius:10px; padding:14px 16px; text-align:center; min-width:130px;">
+        <div style="font-size:20px;">📦</div>
+        <div style="font-weight:700; font-size:13px; color:#1F3864; margin:4px 0;">Source Systems</div>
+        <div style="font-size:11px; color:#667;">CRM, ERP, APIs, Web Scraping</div>
+      </div>
+      <div style="display:flex; align-items:center; padding:0 8px; color:#2E75B6; font-size:20px;">→</div>
+      <div style="background:#EBF5FF; border:2px solid #4BACC6; border-radius:10px; padding:14px 16px; text-align:center; min-width:130px;">
+        <div style="font-size:20px;">🐍</div>
+        <div style="font-weight:700; font-size:13px; color:#1F3864; margin:4px 0;">Extract & Transform</div>
+        <div style="font-size:11px; color:#667;">Python pandas ETL scripts</div>
+      </div>
+      <div style="display:flex; align-items:center; padding:0 8px; color:#2E75B6; font-size:20px;">→</div>
+      <div style="background:#EBF5FF; border:2px solid #1F3864; border-radius:10px; padding:14px 16px; text-align:center; min-width:130px;">
+        <div style="font-size:20px;">🗃️</div>
+        <div style="font-weight:700; font-size:13px; color:#1F3864; margin:4px 0;">Data Warehouse</div>
+        <div style="font-size:11px; color:#667;">PostgreSQL (Fact + Dim tables)</div>
+      </div>
+      <div style="display:flex; align-items:center; padding:0 8px; color:#2E75B6; font-size:20px;">→</div>
+      <div style="background:#DCFCE7; border:2px solid #70AD47; border-radius:10px; padding:14px 16px; text-align:center; min-width:130px;">
+        <div style="font-size:20px;">📊</div>
+        <div style="font-weight:700; font-size:13px; color:#1F3864; margin:4px 0;">Power BI</div>
+        <div style="font-size:11px; color:#667;">DirectQuery / Import mode</div>
+      </div>
+      <div style="display:flex; align-items:center; padding:0 8px; color:#2E75B6; font-size:20px;">→</div>
+      <div style="background:#FEF3C7; border:2px solid #FFC000; border-radius:10px; padding:14px 16px; text-align:center; min-width:130px;">
+        <div style="font-size:20px;">👤</div>
+        <div style="font-weight:700; font-size:13px; color:#1F3864; margin:4px 0;">Stakeholders</div>
+        <div style="font-size:11px; color:#667;">Self-serve dashboards</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== POWER BI ===================== -->
+<div id="powerbi" class="section">
+  <div class="section-title">Power BI Dashboard Specifications</div>
+  <div class="section-sub">4 dashboards covering executive, regional, customer, and competitive views</div>
+
+  <div class="grid grid-2" style="margin-bottom:24px;">
+    <div class="pbi-board">
+      <h3>📊 Dashboard 1: Executive Market Overview</h3>
+      <p style="font-size:12px; opacity:0.8; margin-bottom:14px;">Audience: CEO, Board | Refresh: Monthly</p>
+      <div class="pbi-panels">
+        <div class="pbi-panel">
+          <div class="panel-title">KPI Cards</div>
+          <ul>
+            <li>Total Revenue (MoM & YoY)</li>
+            <li>Total Orders & Growth %</li>
+            <li>Market Share %</li>
+            <li>Customer NPS Score</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">Visuals</div>
+          <ul>
+            <li>Revenue trend line chart</li>
+            <li>Regional donut chart</li>
+            <li>RAG status table</li>
+            <li>CAGR waterfall chart</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">Filters / Slicers</div>
+          <ul>
+            <li>Date Range (fiscal year)</li>
+            <li>Region multi-select</li>
+            <li>Cuisine type</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">DAX Measures</div>
+          <ul>
+            <li>Revenue YoY % = DIVIDE(...)</li>
+            <li>Rolling 12M Revenue</li>
+            <li>Market Share = Our Rev / TAM</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="pbi-board" style="background: linear-gradient(135deg, #1a4731, #2d7a4f);">
+      <h3>🗺️ Dashboard 2: Regional Performance</h3>
+      <p style="font-size:12px; opacity:0.8; margin-bottom:14px;">Audience: VP Operations | Refresh: Weekly</p>
+      <div class="pbi-panels">
+        <div class="pbi-panel">
+          <div class="panel-title">KPI Cards</div>
+          <ul>
+            <li>Orders by City</li>
+            <li>Avg Delivery Time</li>
+            <li>Revenue per Region</li>
+            <li>Completion Rate %</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">Visuals</div>
+          <ul>
+            <li>India map (filled)</li>
+            <li>City-level bar chart</li>
+            <li>Delivery time heat matrix</li>
+            <li>Order volume bubble chart</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">Drill-through</div>
+          <ul>
+            <li>City → Restaurant level</li>
+            <li>City → Cuisine breakdown</li>
+            <li>City → Customer count</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">Alerts</div>
+          <ul>
+            <li>Delivery time &gt; 45 min</li>
+            <li>Cancellation rate &gt; 12%</li>
+            <li>Revenue drop &gt; 15% MoM</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid grid-2">
+    <div class="pbi-board" style="background: linear-gradient(135deg, #3d1a60, #6b35a8);">
+      <h3>👥 Dashboard 3: Customer Segmentation</h3>
+      <p style="font-size:12px; opacity:0.8; margin-bottom:14px;">Audience: Marketing | Refresh: Monthly</p>
+      <div class="pbi-panels">
+        <div class="pbi-panel">
+          <div class="panel-title">KPI Cards</div>
+          <ul>
+            <li>Avg CLV by Segment</li>
+            <li>Churn Rate %</li>
+            <li>Champion % of Base</li>
+            <li>Retention Rate (90-day)</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">Visuals</div>
+          <ul>
+            <li>RFM segment bar chart</li>
+            <li>CLV scatter (R vs M)</li>
+            <li>Cohort retention heatmap</li>
+            <li>Acquisition channel funnel</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">Actions</div>
+          <ul>
+            <li>Export segment to CSV</li>
+            <li>Push to CRM campaign</li>
+            <li>Filter by age group</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">DAX Measures</div>
+          <ul>
+            <li>CLV = Avg AOV × Frequency × 12</li>
+            <li>Churn = Lost / Prior Active</li>
+            <li>Retention = Retained / Cohort Size</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="pbi-board" style="background: linear-gradient(135deg, #7a1a1a, #c0392b);">
+      <h3>🏆 Dashboard 4: Competitor Tracking</h3>
+      <p style="font-size:12px; opacity:0.8; margin-bottom:14px;">Audience: Strategy Team | Refresh: Weekly</p>
+      <div class="pbi-panels">
+        <div class="pbi-panel">
+          <div class="panel-title">KPI Cards</div>
+          <ul>
+            <li>Our Market Share %</li>
+            <li>Price Index vs Competitor</li>
+            <li>Delivery Time Gap</li>
+            <li>Promo Intensity Score</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">Visuals</div>
+          <ul>
+            <li>Market share stacked bar</li>
+            <li>Price comparison table</li>
+            <li>Competitor positioning matrix</li>
+            <li>Share trend line (12M)</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">Benchmarks</div>
+          <ul>
+            <li>Swiggy, Zomato, Dunzo</li>
+            <li>Price gap threshold: 10%</li>
+            <li>Delivery gap threshold: 5 min</li>
+          </ul>
+        </div>
+        <div class="pbi-panel">
+          <div class="panel-title">Alerts</div>
+          <ul>
+            <li>Price gap &gt; 10% triggers email</li>
+            <li>Share drop &gt; 2% triggers review</li>
+            <li>Promo surge detection</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===================== JIRA ===================== -->
+<div id="jira" class="section">
+  <div class="section-title">Jira Project Backlog</div>
+  <div class="section-sub">Sprint planning across 5 sprints (2-week cadence) | Managed in Jira Software | Project: FDMA</div>
+
+  <table style="margin-bottom:28px;">
+    <tr><th>Issue ID</th><th>Type</th><th>Summary</th><th>Sprint</th><th>Assignee</th><th>Priority</th><th>Status</th></tr>
+    <tr>
+      <td>FDMA-001</td>
+      <td><span class="badge badge-purple">Epic</span></td>
+      <td>Market Intelligence Framework</td>
+      <td>Sprint 1–2</td>
+      <td>BA Lead</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-002</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Stakeholder interviews & workshop facilitation</td>
+      <td>Sprint 1</td>
+      <td>BA Lead</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-003</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Create BRD and data dictionary in Confluence</td>
+      <td>Sprint 1</td>
+      <td>BA Lead</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-004</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Design SQL schema (fact + dim tables)</td>
+      <td>Sprint 1</td>
+      <td>Data Engineer</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-005</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Build Python ETL pipeline for order data</td>
+      <td>Sprint 2</td>
+      <td>Data Engineer</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-006</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Write SQL KPI queries (YoY, CAGR, regional)</td>
+      <td>Sprint 2</td>
+      <td>Analytics</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-007</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>RFM segmentation Python script (K-Means)</td>
+      <td>Sprint 3</td>
+      <td>Analytics</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-008</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Revenue forecasting model (Linear Regression)</td>
+      <td>Sprint 3</td>
+      <td>Analytics</td>
+      <td><span class="badge badge-orange">Medium</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-009</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Build Executive Market Overview Power BI dashboard</td>
+      <td>Sprint 4</td>
+      <td>BI Developer</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-010</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Build Regional Performance Power BI dashboard</td>
+      <td>Sprint 4</td>
+      <td>BI Developer</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-011</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Build Customer Segmentation Power BI dashboard</td>
+      <td>Sprint 4</td>
+      <td>BI Developer</td>
+      <td><span class="badge badge-orange">Medium</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-012</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Build Competitor Tracking Power BI dashboard</td>
+      <td>Sprint 4</td>
+      <td>BI Developer</td>
+      <td><span class="badge badge-orange">Medium</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-013</td>
+      <td><span class="badge badge-blue">Story</span></td>
+      <td>Create Excel financial model (scenario analysis)</td>
+      <td>Sprint 4</td>
+      <td>Finance/BA</td>
+      <td><span class="badge badge-orange">Medium</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-014</td>
+      <td><span class="badge badge-green">Task</span></td>
+      <td>UAT test cases creation (50 test cases)</td>
+      <td>Sprint 5</td>
+      <td>BA Lead</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-015</td>
+      <td><span class="badge badge-green">Task</span></td>
+      <td>Stakeholder UAT sessions & sign-off</td>
+      <td>Sprint 5</td>
+      <td>BA Lead + PM</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-016</td>
+      <td><span class="badge badge-green">Task</span></td>
+      <td>Power BI Service deployment & RBAC setup</td>
+      <td>Sprint 5</td>
+      <td>BI Developer</td>
+      <td><span class="badge badge-red">High</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+    <tr>
+      <td>FDMA-017</td>
+      <td><span class="badge badge-green">Task</span></td>
+      <td>User training & handover documentation</td>
+      <td>Sprint 5</td>
+      <td>BA Lead</td>
+      <td><span class="badge badge-orange">Medium</span></td>
+      <td><span class="badge badge-blue">To Do</span></td>
+    </tr>
+  </table>
+
+  <div class="grid grid-3">
+    <div class="card">
+      <h3>📅 Sprint 1 (Mar 1–14)</h3>
+      <p>Focus: Planning & Requirements</p>
+      <ul style="margin-top:8px;">
+        <li>FDMA-002: Stakeholder interviews</li>
+        <li>FDMA-003: BRD documentation</li>
+        <li>FDMA-004: SQL schema design</li>
+        <li>LucidChart AS-IS flow diagram</li>
+        <li>Jira backlog refinement</li>
+      </ul>
+    </div>
+    <div class="card green">
+      <h3>📅 Sprint 2 (Mar 15–Apr 4)</h3>
+      <p>Focus: Data Infrastructure</p>
+      <ul style="margin-top:8px;">
+        <li>FDMA-005: Python ETL pipeline</li>
+        <li>FDMA-006: SQL KPI queries</li>
+        <li>Data quality validation</li>
+        <li>Competitor data ingestion</li>
+        <li>GitHub repo & CI/CD setup</li>
+      </ul>
+    </div>
+    <div class="card orange">
+      <h3>📅 Sprint 3 (Apr 5–25)</h3>
+      <p>Focus: Analytics & Modeling</p>
+      <ul style="margin-top:8px;">
+        <li>FDMA-007: RFM segmentation</li>
+        <li>FDMA-008: Revenue forecasting</li>
+        <li>Cohort retention analysis</li>
+        <li>Competitor benchmarking SQL</li>
+        <li>Python dashboard visualization</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<script>
+function showTab(id) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  const tabs = ['overview','requirements','stories','workflow','powerbi','jira'];
+  document.querySelectorAll('.tab')[tabs.indexOf(id)].classList.add('active');
+}
+</script>
+</body>
+</html>
